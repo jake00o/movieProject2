@@ -38,7 +38,7 @@ python -m venv venv
 
 ### 4. Install Dependencies
 ```sh
-pip install -r requirements.txt
+pip install pandas numpy matplotlib colorama pyfiglet
 ```
 
 ### 5. Run the Program
@@ -47,8 +47,8 @@ python main.py
 ```
 
 ## File Descriptions
-- `objects.py` - Handles data analysis and visualization.
-- `db.py` - Manages SQLite database operations.
+- `objects.py` - Objects that Handles data analysis and visualization.
+- `db.py` - Manages database operations.
 - `ui.py` - Manages the user interface, including animations.
 - `main.py` - Integrates all components and runs the program.
 
