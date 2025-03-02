@@ -1,34 +1,62 @@
+"""
+main.py - CLI entry point for it
+This module handles user interaction and menu logic.
+"""
+
 import time
-from objects import MovieDatabase
-from db import create_database, insert_data_from_csv
-from ui import print_menu, goodbye_animation
+from colorama import init, Fore, Style
+from db import load_data
+from ui import (
+    clear_screen,
+    fancy_heading,
+    goodbye_animation,
+    show_common_genres,
+    show_ratings_distribution,
+    show_year_wise_additions
+)
 
 def main():
-    dataset_path = "netflix_titles.csv"
-    create_database()
-    insert_data_from_csv(dataset_path)
-    movie_db = MovieDatabase(dataset_path)
+    init(autoreset=True)
+
+    # Load CSV
+    df = load_data('netflix_titles.csv')
+    if df.empty:
+        print(Fore.RED + "No data found or file missing. Exiting..." + Style.RESET_ALL)
+        time.sleep(2)
+        return
 
     while True:
-        print_menu()
-        choice = input("Enter your choice: ")
-        
-        if choice == "1":
-            print("Most Common Genres:")
-            print(movie_db.get_most_common_genres())
-        elif choice == "2":
-            print("Content Distribution by Rating:")
-            print(movie_db.get_content_distribution_by_rating())
-        elif choice == "3":
-            print("Addition Trend Over Years:")
-            print(movie_db.get_addition_trend_over_years())
-        elif choice == "4":
-            goodbye_animation()
-            break
-        else:
-            print("❌ Invalid choice, please try again.")
-        
-        input("Press Enter to continue...")
+        try:
+            clear_screen()
+            fancy_heading(" MOVIES APPLICATION")
+
+            print(Fore.YELLOW + "1." + Style.RESET_ALL + " Show Most Common Genres")
+            print(Fore.YELLOW + "2." + Style.RESET_ALL + " Show Distribution by Rating")
+            print(Fore.YELLOW + "3." + Style.RESET_ALL + " Show Trend of Additions Over the Years")
+            print(Fore.YELLOW + "4." + Style.RESET_ALL + " Exit")
+
+            choice = input("\nEnter your choice (1-4): ").strip()
+
+            if choice == '1':
+                show_common_genres(df)
+            elif choice == '2':
+                show_ratings_distribution(df)
+            elif choice == '3':
+                show_year_wise_additions(df)
+            elif choice == '4':
+                clear_screen()
+                goodbye_animation()
+                break
+            else:
+                print(Fore.RED + "Invalid choice! Please try again." + Style.RESET_ALL)
+                time.sleep(1)
+        except Exception as e:
+            print(Fore.RED + f"Error in main loop: {e}" + Style.RESET_ALL)
+            time.sleep(2)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(Fore.RED + f"Fatal error: {e}" + Style.RESET_ALL)
+        time.sleep(2)
